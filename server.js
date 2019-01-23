@@ -8,14 +8,72 @@ const PORT = process.env.PORT || 3000;
 const INDEX = path.join(__dirname, 'index.html');
 
 const server = express()
-  .use((req, res) => res.sendFile(INDEX) )
+  .use(express.static(path.join(__dirname, 'client/build')))
+  .get('*', (req, res) => {
+    res.sendFile(path.join(__dirname+'/client/build/index.html'))
+  })
+  // .use((req, res) => res.sendFile(INDEX) )
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 const io = socketIO(server);
 
-io.on('connection', (socket) => {
+let players = {};
+let answers = [];
+
+io.on('connection', function(socket) {
   console.log('Client connected');
   socket.on('disconnect', () => console.log('Client disconnected'));
-});
 
-setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+    socket.on('register', name => {
+        const id = getUniqueId();
+        players[id] = {name, score: 0};
+        socket.emit('success', id);
+        console.log(`${name}(${id}) has registered`);
+    });
+
+    socket.on('submit', payload => {
+        const id = payload.id;
+        const name = players[payload.id].name;
+        console.log(`${name} answered: ${payload.answer}`);
+        answers.push({id, name, answer: payload.answer})
+    });
+
+    socket.on('answers', () => {
+        console.log('answers request recieved')
+        socket.emit('answers', answers)
+    });
+
+    socket.on('score', responses => {
+        responses = responses ? responses : []
+        for(let res of responses) {
+            if (res.correct){
+                players[res.id].score += 1
+            }
+        }
+        answers = [];
+    });
+
+    socket.on('results', () => {
+        let scores = Object.entries(players).map(player => player[1]);
+        socket.emit('results', scores);
+    });
+})
+
+function getUniqueId() {
+    do {
+        var id = Math.round(Math.random() * 100000);
+    } while (id in players);
+    return id;
+}
+
+if (!Object.entries) {
+    Object.entries = function( obj ){
+      var ownProps = Object.keys( obj ),
+          i = ownProps.length,
+          resArray = new Array(i); // preallocate the Array
+      while (i--)
+        resArray[i] = [ownProps[i], obj[ownProps[i]]];
+      
+      return resArray;
+    };
+  }
