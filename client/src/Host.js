@@ -189,7 +189,7 @@ class Host extends React.Component {
             console.log('recieved', responses);
             responses = responses.map(res => {
                 return {...res, 
-                    correct: this.checkAnswer(res.answer, this.answers[this.state.i])};
+                    correct: this.checkAnswer(res.answer.toLowerCase(), this.answers[this.state.i].toLowerCase())};
             });
             this.setState({responses});
         });
@@ -228,7 +228,7 @@ class Host extends React.Component {
         insert = remove = function(node) { return 1; };
         update = function(stringA, stringB) { return stringA !== stringB ? 1 : 0; };
         let lev = ed.levenshtein(s1, s2, insert, remove, update);
-        return lev.distance < 5
+        return lev.distance < 5;
     }
 
     decode(html) {
