@@ -169,7 +169,8 @@ class Host extends React.Component {
         super();
         this.state = {
           i: -1,
-          showAnswer: false
+          showAnswer: false,
+          n: -1
         }
         this.increment = this.increment.bind(this);
         this.showAnswer = this.showAnswer.bind(this);
@@ -240,7 +241,7 @@ class Host extends React.Component {
         this.socket.emit('score', this.state.responses);
         this.setState(() => {
           return {
-            i: this.state.i + 1,
+            n: this.state.n + 1,
             showAnswer: false,
             responses: []
           }
@@ -250,6 +251,7 @@ class Host extends React.Component {
     showAnswer() {
         this.setState(() => {
             return {
+                i: this.state.i + 1,
                 showAnswer: true
             }
         });
@@ -268,7 +270,7 @@ class Host extends React.Component {
         return (
             <div className="host">
                 <Nav i={this.state.i} increment={this.increment} showAnswer={this.showAnswer} getResponses={this.getResponses} getResults={this.getResults}/>
-                <Body i={this.state.i} showAnswer={this.state.showAnswer} scores={this.state.scores} responses={this.state.responses} questions={this.state.questions} answers={this.state.answers} toggle={this.toggleCorrect}/>
+                <Body i={this.state.n} showAnswer={this.state.showAnswer} scores={this.state.scores} responses={this.state.responses} questions={this.state.questions} answers={this.state.answers} toggle={this.toggleCorrect}/>
             </div>
         );
     }
@@ -305,8 +307,8 @@ class Body extends React.Component {
                     {this.state.i > -1 && this.state.showAnswer?
                     <Answer answer={this.answers[this.state.i]}/>
                     : <></>}
-                    <div>
-                        <Timer i={this.state.i}/>
+                    <div className={this.state.showAnswer ? "hidden" : ""}>
+                        <Timer i={this.state.i} />
                     </div>
                     <Responses toggle={this.props.toggle} responses={this.state.responses}/>
                     <Results scores={this.state.scores} />
