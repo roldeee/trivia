@@ -37,9 +37,20 @@ class Client extends React.Component {
     }
 
     render (){
+        const submit = (e) => {
+            if (this.state.registered) {
+                this.submitAnswer();
+                e.preventDefault()
+            } else {
+                this.register();
+                e.preventDefault();
+            }
+        }
         return (
             <div className="jumbotron">
-                <textarea className="input form-control" ref={input => this.input = input}/>
+                <form onSubmit={submit}>
+                    <input className="input form-control" ref={input => this.input = input}/>
+                </form>
                 <Submit registered={this.state.registered} func={this.state.registered ? this.submitAnswer: this.register}/>
             </div>
         );
