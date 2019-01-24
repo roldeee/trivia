@@ -107,6 +107,9 @@ Responses.propTypes = {
 }
 
 function Results({ scores }) {
+    if (scores) {
+        scores.sort((a, b) => b[1] - a[1]);
+    }
     return (
         <div className='results'>
             <ul>
@@ -264,6 +267,12 @@ class Host extends React.Component {
 
     getResults() {
         this.socket.emit('results', this.state.responses);
+        this.setState(() => {
+            return {
+              showAnswer: false,
+              responses: []
+            }
+          });
     }
 
     render() {

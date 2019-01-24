@@ -5,14 +5,12 @@ const socketIO = require('socket.io');
 const path = require('path');
 
 const PORT = process.env.PORT || 3000;
-const INDEX = path.join(__dirname, 'index.html');
 
 const server = express()
   .use(express.static(path.join(__dirname, 'client/build')))
   .get('*', (req, res) => {
     res.sendFile(path.join(__dirname+'/client/build/index.html'))
   })
-  // .use((req, res) => res.sendFile(INDEX) )
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 const io = socketIO(server);
@@ -39,7 +37,6 @@ io.on('connection', function(socket) {
         const id = payload.id;
         const name = players[payload.id].name;
         console.log(`${name} answered: ${payload.answer}`);
-        // answers.push({id, name, answer: payload.answer});
         answers[id] = {id, name, answer: payload.answer};
     });
 
