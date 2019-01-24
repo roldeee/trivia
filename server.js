@@ -21,11 +21,15 @@ let players = {};
 let answers = [];
 
 io.on('connection', function(socket) {
-  console.log('Client connected');
-  socket.on('disconnect', () => console.log('Client disconnected'));
+    console.log('Client connected');
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+        delete players[socket.id];
+    });
 
     socket.on('register', name => {
-        const id = getUniqueId();
+        const id = socket.id;
         players[id] = {name, score: 0};
         socket.emit('success', id);
         console.log(`${name}(${id}) has registered`);
@@ -43,27 +47,23 @@ io.on('connection', function(socket) {
         socket.emit('answers', answers)
     });
 
-    socket.on('score', responses => {
-        responses = responses ? responses : []
-        for(let res of responses) {
-            if (res.correct){
-                players[res.id].score += 1
-            }
-        }
-        answers = [];
-    });
+    socket.on('score', score);
 
-    socket.on('results', () => {
+    socket.on('results', (responses) => {
+        score(responses);
         let scores = Object.entries(players).map(player => player[1]);
         socket.emit('results', scores);
     });
 })
 
-function getUniqueId() {
-    do {
-        var id = Math.round(Math.random() * 100000);
-    } while (id in players);
-    return id;
+function score(responses) {
+    responses = responses ? responses : []
+    for(let res of responses) {
+        if (res.correct){
+            players[res.id].score += 1
+        }
+    }
+    answers = [];
 }
 
 if (!Object.entries) {

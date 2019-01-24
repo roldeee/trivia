@@ -261,7 +261,7 @@ class Host extends React.Component {
     }
 
     getResults() {
-        this.socket.emit('results');
+        this.socket.emit('results', this.state.responses);
     }
 
     render() {
