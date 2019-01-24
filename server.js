@@ -18,7 +18,7 @@ const server = express()
 const io = socketIO(server);
 
 let players = {};
-let answers = [];
+let answers = {};
 
 io.on('connection', function(socket) {
     console.log('Client connected');
@@ -39,12 +39,13 @@ io.on('connection', function(socket) {
         const id = payload.id;
         const name = players[payload.id].name;
         console.log(`${name} answered: ${payload.answer}`);
-        answers.push({id, name, answer: payload.answer})
+        // answers.push({id, name, answer: payload.answer});
+        answers[id] = {id, name, answer: payload.answer};
     });
 
     socket.on('answers', () => {
         console.log('answers request recieved')
-        socket.emit('answers', answers)
+        socket.emit('answers', Object.values(answers))
     });
 
     socket.on('score', score);
