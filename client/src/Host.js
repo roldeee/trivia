@@ -278,81 +278,35 @@ class Host extends React.Component {
     render() {
         return (
             <div className="host">
-                <Nav i={this.state.i} increment={this.increment} showAnswer={this.showAnswer} getResponses={this.getResponses} getResults={this.getResults}/>
-                <Body i={this.state.n} showAnswer={this.state.showAnswer} scores={this.state.scores} responses={this.state.responses} questions={this.state.questions} answers={this.state.answers} toggle={this.toggleCorrect}/>
-            </div>
-        );
-    }
-}
-
-class Body extends React.Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            i: this.props.i
-        }
-    }
-
-    componentWillReceiveProps(nextProps){
-        this.questions = nextProps.questions;
-        this.answers = nextProps.answers;
-        this.setState(() => {
-            return {
-                i: nextProps.i,
-                showAnswer: nextProps.showAnswer,
-                responses: nextProps.responses,
-                scores: nextProps.scores
-            }
-        });
-    }
-    
-    render(){
-        try {
-            return (
+                <div className="jumbotron">
+                    <Title/>
+                    <div className="btn-group btn-group-lg" role="group">
+                        <QuestionButton qFunction={this.increment}/>
+                        <AnswerButton aFunction={this.showAnswer}/>
+                        <ResponsesButton rFunction={this.getResponses}/>
+                        <ResultsButton fFunction={this.getResults}/>
+                    </div>
+                    <h2 className="count">
+                        {24 - this.state.i}
+                    </h2>
+                </div>
                 <div>
-                    {this.state.i > -1 ? 
-                    <Question question={this.questions[this.state.i]}/>
+                    {this.state.n > -1 ? 
+                    <Question question={this.state.questions[this.state.n]}/>
                     : <></>}
-                    {this.state.i > -1 && this.state.showAnswer?
-                    <Answer answer={this.answers[this.state.i]}/>
+                    {this.state.n > -1 && this.state.showAnswer?
+                    <Answer answer={this.answers[this.state.n]}/>
                     : <></>}
                     <div className={this.state.showAnswer ? "hidden" : ""}>
-                        <Timer i={this.state.i} />
+                        <Timer i={this.state.n} />
                     </div>
-                    <Responses toggle={this.props.toggle} responses={this.state.responses}/>
+                    <Responses toggle={this.toggleCorrect} responses={this.state.responses}/>
                     <Results scores={this.state.scores} />
                 </div>
-            );
-        }
-        catch (e) {
-            console.log(e);
-            return (
-                <div>
-                    Error: {e}
-                </div>
-            );
-        }
-    }
-}
-
-class Nav extends React.Component {
-
-    render () {
-        return (
-            <div className="jumbotron">
-                <Title/>
-                <div className="btn-group btn-group-lg" role="group">
-                    <QuestionButton qFunction={this.props.increment}/>
-                    <AnswerButton aFunction={this.props.showAnswer}/>
-                    <ResponsesButton rFunction={this.props.getResponses}/>
-                    <ResultsButton fFunction={this.props.getResults}/>
-                </div>
-                <h2 className="count">
-                    {24 - this.props.i}
-                </h2>
             </div>
         );
     }
 }
+
 
 export default Host;

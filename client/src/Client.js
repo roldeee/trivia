@@ -17,23 +17,29 @@ class Client extends React.Component {
         this.socket.on('success', id => {
             this.playerId = id;
             console.log(this.playerId);
-        })
+        });
+        this.socket.on('failure', () => {
+            alert('Connection error... please reconnect.');
+        });
     }
 
     register(){
-        this.socket.emit('register', this.input.value);
-        this.setState({registered: true});
-        this.input.value = '';
+        if (this.input.value){
+            this.socket.emit('register', this.input.value);
+            this.setState({registered: true});
+            this.input.value = '';
+        }
     }
 
     submitAnswer() {
-        let payload = {
-            id: this.playerId,
-            answer: this.input.value
+        if (this.input.value) {
+            let payload = {
+                id: this.playerId,
+                answer: this.input.value
+            }
+            this.socket.emit('submit', payload);
+            this.input.value = '';
         }
-        console.log(payload);
-        this.socket.emit('submit', payload);
-        this.input.value = '';
     }
 
     render (){

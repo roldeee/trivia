@@ -34,10 +34,16 @@ io.on('connection', function(socket) {
     });
 
     socket.on('submit', payload => {
-        const id = payload.id;
-        const name = players[payload.id].name;
-        console.log(`${name} answered: ${payload.answer}`);
-        answers[id] = {id, name, answer: payload.answer};
+        try {
+            const id = payload.id;
+            const name = players[payload.id].name;
+            console.log(`${name} answered: ${payload.answer}`);
+            answers[id] = {id, name, answer: payload.answer};
+        }
+        catch (e) {
+            console.error("Connection error...");
+            socket.emit('failure');
+        }
     });
 
     socket.on('answers', () => {
