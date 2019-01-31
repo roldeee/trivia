@@ -27,10 +27,16 @@ io.on('connection', function(socket) {
     });
 
     socket.on('register', name => {
-        const id = socket.id;
-        players[id] = {name, score: 0};
-        socket.emit('success', id);
-        console.log(`${name}(${id}) has registered`);
+        try{
+            const id = socket.id;
+            players[id] = {name, score: 0};
+            socket.emit('success', id);
+            console.log(`${name}(${id}) has registered`);
+        }
+        catch (e) {
+            console.error("Registration error...");
+            socket.emit("failure");
+        }
     });
 
     socket.on('submit', payload => {
@@ -54,17 +60,22 @@ io.on('connection', function(socket) {
     socket.on('score', score);
 
     socket.on('results', (responses) => {
-        score(responses);
-        let scores = Object.entries(players).map(player => player[1]);
-        socket.emit('results', scores);
+        try{
+            score(responses);
+            let scores = Object.entries(players).map(player => player[1]);
+            socket.emit('results', scores);
+        }
+        catch (e) {
+            console.error("Scoring error...")
+        }
     });
 })
 
 function score(responses) {
-    responses = responses ? responses : []
+    responses = responses ? responses : [];
     for(let res of responses) {
         if (res.correct){
-            players[res.id].score += 1
+            players[res.id].score += 1;
         }
     }
     answers = [];

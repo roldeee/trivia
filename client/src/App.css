@@ -85,10 +85,14 @@
  .client {
    background-color: #515252;
    height: 100%;
+   padding-top: 25%;
+   padding-bottom: 25%; 
  }
 
  .input {
-  margin-bottom: 5em;
+  top: -10em;
+  position: relative;
+  margin-bottom: 10em;
  }
 
  .correct {
