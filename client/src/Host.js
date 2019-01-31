@@ -167,15 +167,17 @@ class Host extends React.Component {
         this.state = {
           i: -1,
           showAnswer: false,
-          n: -1
+          n: -1,
+          qr: false
         }
         this.increment = this.increment.bind(this);
         this.showAnswer = this.showAnswer.bind(this);
         this.getResponses = this.getResponses.bind(this);
         this.getResults = this.getResults.bind(this);
         this.toggleCorrect = this.toggleCorrect.bind(this);
+        this.toggleQR = this.toggleQR.bind(this);
 
-        axios.get('https://opentdb.com/api.php?amount=50&category=9&difficulty=medium&type=multiple')
+        axios.get('https://opentdb.com/api.php?amount=50&type=multiple')
         .then(response => this.parseQuestions(response));
     }
 
@@ -197,6 +199,10 @@ class Host extends React.Component {
             this.setState({scores});
             console.log(scores);
         });
+    }
+
+    toggleQR() {
+        this.setState({ qr: !this.state.qr });
     }
     
     toggleCorrect(id) {
@@ -277,6 +283,11 @@ class Host extends React.Component {
                         {24 - this.state.i} questions left
                     </h2>
                 </div>
+                <div className="half1" onClick={this.toggleQR}>
+                    <h1>
+                        c1-trivia.herokuapp.com
+                    </h1>
+                </div>
                 <div className="half2">
                     <div className={"timer"}>
                         <div className={(this.state.showAnswer ? "invis" : "")}>
@@ -284,6 +295,9 @@ class Host extends React.Component {
                         </div>
                     </div>
                 </div>
+                {this.state.qr ? 
+                <img src="frame.png" alt="QR Code"/> :
+                <></>}
                 <div>
                     {this.state.n < 0 ?
                     <Title/> 

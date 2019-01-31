@@ -53,7 +53,7 @@ class Client extends React.Component {
             }
         }
         return (
-            <div className="jumbotron">
+            <div className="jumbotron client">
                 <form onSubmit={submit}>
                     <input className="input form-control" ref={input => this.input = input}/>
                 </form>
@@ -80,7 +80,7 @@ class Submit extends React.Component {
     render() {
         return (
             <div>
-                <button onClick={this.state.func} className="btn btn-success btn-large">
+                <button onClick={this.state.func} className="ods-button--ghost">
                     {this.state.registered ?
                     "Submit Answer"
                     :"Enter Name"}
