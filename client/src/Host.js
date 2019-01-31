@@ -48,19 +48,11 @@ class Timer extends React.Component {
     }
   
     render() {
-        if (this.state.seconds > 0 ){
             return( 
-                <div>
                     <h2>
-                        {this.state.seconds}
+                        {this.state.seconds} s
                     </h2>
-                </div>
             );
-        } else {
-            return (
-                <> </>
-            );
-        }
     }
 }
 
@@ -130,14 +122,16 @@ function Results({ scores }) {
 
 function Title () {
     return (
-        <h1>Trivia One</h1>
+        <div className="title">
+            <h1>Trivia One</h1>
+        </div>
     );
 }
     
 class QuestionButton extends React.Component {
     render() {
         return (
-            <button className="btn btn-info" onClick={this.props.qFunction}>Question</button>
+            <button className="ods-button--ghost" onClick={this.props.qFunction}>Question</button>
         );
     }
 }
@@ -145,7 +139,7 @@ class QuestionButton extends React.Component {
 class AnswerButton extends React.Component{
     render(){
         return (
-            <button className="btn btn-secondary" onClick={this.props.aFunction}>Answer</button>
+            <button className="ods-button--ghost" onClick={this.props.aFunction}>Answer</button>
         );
     }
 }
@@ -153,7 +147,7 @@ class AnswerButton extends React.Component{
 class ResponsesButton extends React.Component {
     render () {
         return(
-            <button className="btn btn-primary" onClick={this.props.rFunction}>Responses</button>
+            <button className="ods-button--ghost" onClick={this.props.rFunction}>Responses</button>
         );
     };
 }
@@ -162,7 +156,7 @@ class ResultsButton extends React.Component {
     
     render(){
         return (
-            <button onClick={this.props.fFunction} className="btn btn-success" >Results</button>
+            <button onClick={this.props.fFunction} className="ods-button--ghost" >Results</button>
         );
     }
 }
@@ -278,30 +272,39 @@ class Host extends React.Component {
     render() {
         return (
             <div className="host">
-                <div className="jumbotron">
-                    <Title/>
-                    <div className="btn-group btn-group-lg" role="group">
-                        <QuestionButton qFunction={this.increment}/>
-                        <AnswerButton aFunction={this.showAnswer}/>
-                        <ResponsesButton rFunction={this.getResponses}/>
-                        <ResultsButton fFunction={this.getResults}/>
-                    </div>
+                <div className="half1">
                     <h2 className="count">
-                        {24 - this.state.i}
+                        {24 - this.state.i} questions left
                     </h2>
                 </div>
+                <div className="half2">
+                    <div className={"timer"}>
+                        <div className={(this.state.showAnswer ? "invis" : "")}>
+                            <Timer i={this.state.n} />
+                        </div>
+                    </div>
+                </div>
                 <div>
+                    {this.state.n < 0 ?
+                    <Title/> 
+                    :<></>
+                    }
                     {this.state.n > -1 ? 
                     <Question question={this.state.questions[this.state.n]}/>
                     : <></>}
                     {this.state.n > -1 && this.state.showAnswer?
                     <Answer answer={this.answers[this.state.n]}/>
                     : <></>}
-                    <div className={this.state.showAnswer ? "hidden" : ""}>
-                        <Timer i={this.state.n} />
-                    </div>
                     <Responses toggle={this.toggleCorrect} responses={this.state.responses}/>
                     <Results scores={this.state.scores} />
+                </div>
+                <div className="nav">
+                    <div className="buttons">
+                        <QuestionButton qFunction={this.increment}/>
+                        <AnswerButton aFunction={this.showAnswer}/>
+                        <ResponsesButton rFunction={this.getResponses}/>
+                        <ResultsButton fFunction={this.getResults}/>
+                    </div>
                 </div>
             </div>
         );
