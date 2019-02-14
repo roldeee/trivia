@@ -82,11 +82,21 @@
   list-style-type: none;
  }
 
+ /* .host {
+   background-color: whitesmoke;
+   height: 100%;
+ } */
+
  .client {
    background-color: #515252;
    height: 100%;
    padding-top: 25%;
    padding-bottom: 25%; 
+ }
+
+ .form {
+    margin: auto;
+    width: 550px;
  }
 
  .input {
@@ -131,6 +141,64 @@
    opacity: 0;
  }
 
+ input {
+  display: block;
+  width: 100%;
+  padding-top: 36.66667px;
+  border: none;
+  border-radius: 0;
+  color: white;
+  background: #515252;
+  font-size: 36.66667px;
+  transition: .3s ease;
+}
+input:valid ~ label {
+  top: 0;
+  font: 700 22px Roboto;
+  color: rgba(255, 255, 255, 0.5);
+}
+input:focus {
+  outline: none;
+}
+input:focus ~ label {
+  top: 0;
+  font: 700 22px Roboto;
+  color: #2196f3;
+}
+input:focus ~ .bar:before {
+  transform: translateX(0);
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #515252 inset;
+  -webkit-text-fill-color: white !important;
+}
+
+.bar {
+  background: rgba(255, 255, 255, 0.5);
+  content: '';
+  width: 550px;
+  height: 3.66667px;
+  transition: .3s ease;
+  position: relative;
+  margin-bottom: 1em;
+}
+
+.msg {
+  color: black;
+  background: #007138;
+  position: absolute;
+  top:0;
+  right: 0;
+  animation-name: fade;
+  animation-duration: 5s;
+  font-size: 24pt;
+  opacity: 0;
+}
+
+@keyframes fade {
+  from {opacity: 1;}
+  to {opacity: 0;}
+}
 
 
  /* Capital One | One Design System | ods-core v.0.8.2 */

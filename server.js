@@ -23,7 +23,6 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', () => {
         console.log('Client disconnected');
-        delete players[socket.id];
     });
 
     socket.on('register', name => {
@@ -36,6 +35,13 @@ io.on('connection', function(socket) {
         catch (e) {
             console.error("Registration error...");
             socket.emit("failure");
+        }
+    });
+
+    socket.on('r', id => {
+        if (players[id]) {
+            socket.emit('resuccess', players[id].name);
+            console.log(`Client reconnected as ${players[id].name}`);
         }
     });
 
@@ -64,12 +70,18 @@ io.on('connection', function(socket) {
             score(responses);
             let scores = Object.entries(players).map(player => player[1]);
             socket.emit('results', scores);
+            clearPlayers();
         }
         catch (e) {
             console.error("Scoring error...")
         }
     });
 })
+
+function clearPlayers() {
+    players = {};
+    answers = {};
+}
 
 function score(responses) {
     responses = responses ? responses : [];

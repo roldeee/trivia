@@ -1,5 +1,6 @@
 import React from 'react';
 import openSocket from 'socket.io-client';
+import cookie from './cookie.js';
 
 class Client extends React.Component {
     constructor(){
@@ -14,13 +15,29 @@ class Client extends React.Component {
 
     componentDidMount() {
         this.socket = openSocket();
+
         this.socket.on('success', id => {
             this.playerId = id;
             console.log(this.playerId);
+            cookie.setItem('id', id, 3600);
         });
+
         this.socket.on('failure', () => {
             alert('Connection error... please reconnect.');
         });
+
+        this.socket.on('resuccess', (name) => {
+            this.setState({msg : `reconnected as ${name} ...`});
+            this.setState(() => ({
+                registered: true
+            }));
+            this.playerId = cookie.getItem('id');
+        });
+        
+        if(cookie.hasItem('id')) {
+            console.log(`reconnecting as ${cookie.getItem('id')} ...`)
+            this.socket.emit('r', cookie.getItem('id'));
+        }
     }
 
     register(){
@@ -53,9 +70,11 @@ class Client extends React.Component {
             }
         }
         return (
-            <div className="jumbotron client">
-                <form onSubmit={submit}>
-                    <input className="input form-control" ref={input => this.input = input}/>
+            <div className="client">
+                <div className="msg">{this.state.msg}</div>
+                <form className="form" onSubmit={submit}>
+                    <input maxLength="30" ref={input => this.input = input}/>
+                    <div className="bar"></div>
                 </form>
                 <Submit registered={this.state.registered} func={this.state.registered ? this.submitAnswer: this.register}/>
             </div>
