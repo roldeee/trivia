@@ -66,6 +66,10 @@
 
 .buttons {
   margin-top: .85%;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 15%;
+  padding-right: 15%; 
 }
 
 .question {

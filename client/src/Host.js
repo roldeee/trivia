@@ -56,9 +56,9 @@ class Timer extends React.Component {
     }
 }
 
-function Question({ question }) {
+function Question({ question, click }) {
   return (
-    <div className="question">
+    <div onClick={click} className="question">
       <h1>
         {question}
       </h1>
@@ -77,6 +77,27 @@ function Answer({ answer }) {
             </h2>
         </div>
     );
+}
+
+function AllAnswers({ answers }) {
+    function shuffle(a) {
+        var j, x, i;
+        for (i = a.length - 1; i > 0; i--) {
+            j = Math.floor(Math.random() * (i + 1));
+            x = a[i];
+            a[i] = a[j];
+            a[j] = x;
+        }
+        return a;
+    }
+    shuffle(answers);
+    return (
+        <div>
+            <ul>
+                {answers.map((ans) => <li><h3>{ans}</h3></li>)}
+            </ul>
+        </div>
+    )
 }
 
 function Responses({ responses, toggle }) {
@@ -167,6 +188,7 @@ class Host extends React.Component {
         this.state = {
           i: -1,
           showAnswer: false,
+          multipleChoice: false,
           n: -1,
           qr: false
         }
@@ -176,6 +198,7 @@ class Host extends React.Component {
         this.getResults = this.getResults.bind(this);
         this.toggleCorrect = this.toggleCorrect.bind(this);
         this.toggleQR = this.toggleQR.bind(this);
+        this.showMultipleChoice = this.showMultipleChoice.bind(this);
 
         axios.get('https://opentdb.com/api.php?amount=50&type=multiple')
         .then(response => this.parseQuestions(response));
@@ -222,10 +245,11 @@ class Host extends React.Component {
         console.log(results);
         this.questions = results.map(r => this.decode(r.question));
         this.answers = results.map(r => this.decode(r.correct_answer));
+        this.choices = results.map(r => r.incorrect_answers.concat(r.correct_answer).map(this.decode));
         this.setState({
             questions: this.questions,
             answers: this.answers
-        })
+        });
     }
 
     checkAnswer(s1, s2) {
@@ -248,6 +272,7 @@ class Host extends React.Component {
           return {
             n: this.state.n + 1,
             showAnswer: false,
+            multipleChoice: false,
             responses: []
           }
         });
@@ -257,7 +282,18 @@ class Host extends React.Component {
         this.setState(() => {
             return {
                 i: this.state.i + 1,
-                showAnswer: true
+                showAnswer: true,
+                multipleChoice: false
+            }
+        });
+    }
+
+    showMultipleChoice() {
+        const temp = this.state.multipleChoice;
+        console.log(temp);
+        this.setState(() => {
+            return {
+                multipleChoice: !temp
             }
         });
     }
@@ -306,10 +342,13 @@ class Host extends React.Component {
                     :<></>
                     }
                     {this.state.n > -1 ? 
-                    <Question question={this.state.questions[this.state.n]}/>
+                    <Question click={this.showMultipleChoice} question={this.state.questions[this.state.n]}/>
                     : <></>}
-                    {this.state.n > -1 && this.state.showAnswer?
+                    {this.state.n > -1 && this.state.showAnswer ?
                     <Answer answer={this.answers[this.state.n]}/>
+                    : <></>}
+                    {this.state.n > -1 && this.state.multipleChoice ?
+                    <AllAnswers answers={this.choices[this.state.n]}/>
                     : <></>}
                     <Responses toggle={this.toggleCorrect} responses={this.state.responses}/>
                     <Results scores={this.state.scores} />
