@@ -7,7 +7,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run bld &&  npm run serve",
+    "start": "npm run serve",
+    "dev-start": "npm run bld &&  npm run serve",
     "serve": "node server.js",
     "bld": "cd client/ && yarn build",
     "dev" : "cd client/ && yarn start",
