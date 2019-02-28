@@ -92,7 +92,7 @@ function AllAnswers({ answers }) {
     }
     shuffle(answers);
     return (
-        <div>
+        <div className="choices">
             <ul>
                 {answers.map((ans) => <li><h3>{ans}</h3></li>)}
             </ul>

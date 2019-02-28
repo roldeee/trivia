@@ -191,6 +191,10 @@ input:-webkit-autofill {
   margin-bottom: 1em;
 }
 
+.choices h3 {
+  font-size: 32pt;
+}
+
 .msg {
   color: black;
   background: #007138;
