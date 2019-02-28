@@ -98,6 +98,10 @@
    padding-bottom: 25%; 
  }
 
+ .client input{
+  text-align: center;
+ }
+
  .form {
     margin: auto;
     width: 100%;

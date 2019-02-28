@@ -7,7 +7,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "npm run bld &&  npm run serve",
+    "serve": "node server.js",
+    "bld": "cd client/ && yarn build",
     "dev" : "cd client/ && yarn start",
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },

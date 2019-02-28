@@ -252,12 +252,13 @@ class Host extends React.Component {
         });
     }
 
+    // TODO: Fix this alg. No es good! :(
     checkAnswer(s1, s2) {
         let insert, remove, update;
         insert = remove = function(node) { return 1; };
         update = function(stringA, stringB) { return stringA !== stringB ? 1 : 0; };
         let lev = ed.levenshtein(s1, s2, insert, remove, update);
-        return lev.distance < 5;
+        return s1 === s2;
     }
 
     decode(html) {
