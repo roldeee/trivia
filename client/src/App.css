@@ -76,11 +76,16 @@
   width: 100%;
   clear: both;
 }
- .question h1 {
-   margin: 0;
-   font-size: 56pt;
-   display: inline;
- }
+
+.question h1 {
+  margin: 0;
+  font-size: 42pt;
+  display: inline;
+}
+
+.category {
+  font-size: 56pt;
+}
 
  ul {
   list-style-type: none;

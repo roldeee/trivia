@@ -4,6 +4,13 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import ed from 'edit-distance';
 
+function getUrlVars() {
+    let vars = {};
+    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars
+} 
 class Timer extends React.Component {
     constructor() {
         super();
@@ -67,6 +74,14 @@ function Question({ question, click }) {
 }
 Question.propTypes = {
   question: PropTypes.string.isRequired
+}
+
+function Category({ category }) {
+    return (
+        <h1 className="category">
+            {category}
+        </h1>
+    );
 }
 
 function Answer({ answer }) {
@@ -200,7 +215,12 @@ class Host extends React.Component {
         this.toggleQR = this.toggleQR.bind(this);
         this.showMultipleChoice = this.showMultipleChoice.bind(this);
 
-        axios.get('https://opentdb.com/api.php?amount=50&type=multiple')
+        this.j = getUrlVars().j === 'true';
+
+        let jAPI = 'http://jservice.io/api/random?count=50';
+        let tAPI = 'https://opentdb.com/api.php?amount=50&type=multiple'
+
+        axios.get(this.j ? jAPI : tAPI)
         .then(response => this.parseQuestions(response));
     }
 
@@ -240,24 +260,38 @@ class Host extends React.Component {
     }
 
     parseQuestions(response) {
-        let results = JSON.parse(response.request.response).results;
-        results = results.filter(r => (r.category !== "Entertainment: Video Games") && (r.category !== "Entertainment: Japanese Anime & Manga"));
-        console.log(results);
-        this.questions = results.map(r => this.decode(r.question));
-        this.answers = results.map(r => this.decode(r.correct_answer));
-        this.choices = results.map(r => r.incorrect_answers.concat(r.correct_answer).map(this.decode));
-        this.setState({
-            questions: this.questions,
-            answers: this.answers
-        });
+        if (this.j){
+            let results = response.data;
+            this.questions = results.map(r => r.question);
+            this.answers = results.map(r => r.answer);
+            this.categories = results.map(r => r.category.title);
+            console.log(this.questions, this.answers, this.categories);
+            this.setState({
+                questions: this.questions,
+                answers: this.answers,
+                categories: this.categories
+            });
+        } else {
+            let results = JSON.parse(response.request.response).results;
+            results = results.filter(r => (r.category !== "Entertainment: Video Games") && (r.category !== "Entertainment: Japanese Anime & Manga"));
+            console.log(results);
+            this.questions = results.map(r => this.decode(r.question));
+            this.answers = results.map(r => this.decode(r.correct_answer));
+            this.choices = results.map(r => r.incorrect_answers.concat(r.correct_answer).map(this.decode));
+            this.setState({
+                questions: this.questions,
+                answers: this.answers
+            });
+            console.log(this.questions, this.answers);
+        }
     }
 
     // TODO: Fix this alg. No es good! :(
     checkAnswer(s1, s2) {
-        let insert, remove, update;
-        insert = remove = function(node) { return 1; };
-        update = function(stringA, stringB) { return stringA !== stringB ? 1 : 0; };
-        let lev = ed.levenshtein(s1, s2, insert, remove, update);
+        // let insert, remove, update;
+        // insert = remove = function(node) { return 1; };
+        // update = function(stringA, stringB) { return stringA !== stringB ? 1 : 0; };
+        // let lev = ed.levenshtein(s1, s2, insert, remove, update);
         return s1 === s2;
     }
 
@@ -342,8 +376,13 @@ class Host extends React.Component {
                     <Title/> 
                     :<></>
                     }
-                    {this.state.n > -1 ? 
-                    <Question click={this.showMultipleChoice} question={this.state.questions[this.state.n]}/>
+                    {this.state.n > -1 ?
+                    <div> 
+                        { this.j ? 
+                        <Category category={this.state.categories[this.state.n]}/>:
+                        <></>}
+                        <Question click={this.showMultipleChoice} question={this.state.questions[this.state.n]}/>
+                    </div>
                     : <></>}
                     {this.state.n > -1 && this.state.showAnswer ?
                     <Answer answer={this.answers[this.state.n]}/>
