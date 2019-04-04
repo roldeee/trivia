@@ -73,7 +73,7 @@ class Client extends React.Component {
             <div className="client">
                 <div className="msg">{this.state.msg}</div>
                 <form className="form" onSubmit={submit}>
-                    <input maxLength="30" ref={input => this.input = input}/>
+                    <input maxLength="120" ref={input => this.input = input}/>
                     <div className="bar"></div>
                 </form>
                 <Submit registered={this.state.registered} func={this.state.registered ? this.submitAnswer: this.register}/>
