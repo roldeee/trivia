@@ -85,6 +85,8 @@
 
 .category {
   font-size: 56pt;
+  color: #a3282b;
+  margin-top: 0;
 }
 
  ul {
@@ -133,8 +135,8 @@
    float: right;
    margin-right: 5%;
    border-style: solid;
-   color: #CC2427;
-   border-color: #CC2427;
+   color: #a3282b;
+   border-color: #a3282b;;
    width: 15%;
  }
 

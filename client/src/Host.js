@@ -381,7 +381,7 @@ class Host extends React.Component {
                         { this.j ? 
                         <Category category={this.state.categories[this.state.n]}/>:
                         <></>}
-                        <Question click={this.showMultipleChoice} question={this.state.questions[this.state.n]}/>
+                        <Question click={this.j ? null : this.showMultipleChoice } question={this.state.questions[this.state.n]}/>
                     </div>
                     : <></>}
                     {this.state.n > -1 && this.state.showAnswer ?
