@@ -12,6 +12,7 @@ class App extends React.Component {
         <Router>
           <Route exact path="/" component={Client}/>
           <Route path="/host" component={Host}/>
+          <Route path="/jhost" render={() => (<Host j={true}/>)}/>
         </Router> 
       </main>
     );

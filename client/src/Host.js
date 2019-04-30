@@ -4,13 +4,6 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import ed from 'edit-distance';
 
-function getUrlVars() {
-    let vars = {};
-    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-        vars[key] = value;
-    });
-    return vars
-} 
 class Timer extends React.Component {
     constructor() {
         super();
@@ -198,8 +191,8 @@ class ResultsButton extends React.Component {
 }
 
 class Host extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
           i: -1,
           showAnswer: false,
@@ -215,7 +208,7 @@ class Host extends React.Component {
         this.toggleQR = this.toggleQR.bind(this);
         this.showMultipleChoice = this.showMultipleChoice.bind(this);
 
-        this.j = getUrlVars().j === 'true';
+        this.j = props.j;
 
         let jAPI = 'http://jservice.io/api/random?count=50';
         let tAPI = 'https://opentdb.com/api.php?amount=50&type=multiple'
