@@ -356,24 +356,23 @@ class Host extends React.Component {
                 <img src="frame.png" alt="QR Code"/> :
                 <></>}
                 <div>
-                    {this.state.n < 0 ?
+                    {this.state.n < 0 &&
                     <Title/> 
-                    :<></>
                     }
-                    {this.state.n > -1 ?
+                    {this.state.n > -1 &&
                     <div> 
-                        { this.j ? 
-                        <Category category={this.state.categories[this.state.n]}/>:
-                        <></>}
+                        {this.j && 
+                        <Category category={this.state.categories[this.state.n]}/>
+                        }
                         <Question click={this.j ? null : this.showMultipleChoice } question={this.state.questions[this.state.n]}/>
                     </div>
-                    : <></>}
-                    {this.state.n > -1 && this.state.showAnswer ?
+                    }
+                    {this.state.n > -1 && this.state.showAnswer &&
                     <Answer answer={this.answers[this.state.n]}/>
-                    : <></>}
-                    {this.state.n > -1 && this.state.multipleChoice ?
+                    }
+                    {this.state.n > -1 && this.state.multipleChoice &&
                     <AllAnswers answers={this.choices[this.state.n]}/>
-                    : <></>}
+                    }
                     <Responses toggle={this.toggleCorrect} responses={this.state.responses}/>
                     <Results scores={this.state.scores} />
                 </div>
