@@ -1,10 +1,10 @@
 {
-  "name": "websockets-socket.io",
+  "name": "trivia-one",
   "version": "1.0.0",
   "engines": {
     "node": "9.10.0"
   },
-  "description": "",
+  "description": "Trivia App",
   "main": "index.js",
   "scripts": {
     "start": "npm run serve",
@@ -15,7 +15,7 @@
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
   "keywords": [],
-  "author": "",
+  "author": "Harold Sandoval",
   "license": "ISC",
   "dependencies": {
     "express": "4.13.4",
