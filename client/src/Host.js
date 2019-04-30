@@ -157,37 +157,28 @@ function Title () {
     );
 }
     
-class QuestionButton extends React.Component {
-    render() {
-        return (
-            <button className="ods-button--ghost" onClick={this.props.qFunction}>Question</button>
-        );
-    }
+function QuestionButton({ qFunction }) {
+    return (
+        <button className="ods-button--ghost" onClick={qFunction}>Question</button>
+    );
 }
 
-class AnswerButton extends React.Component{
-    render(){
-        return (
-            <button className="ods-button--ghost" onClick={this.props.aFunction}>Answer</button>
-        );
-    }
+function AnswerButton({ aFunction }) {
+    return (
+        <button className="ods-button--ghost" onClick={aFunction}>Answer</button>
+    );
 }
 
-class ResponsesButton extends React.Component {
-    render () {
-        return(
-            <button className="ods-button--ghost" onClick={this.props.rFunction}>Responses</button>
-        );
-    };
+function ResponsesButton({ rFunction }) {
+    return(
+        <button className="ods-button--ghost" onClick={rFunction}>Responses</button>
+    );
 }
 
-class ResultsButton extends React.Component {
-    
-    render(){
-        return (
-            <button onClick={this.props.fFunction} className="ods-button--ghost" >Results</button>
-        );
-    }
+function ResultsButton({ fFunction }) {
+    return (
+        <button onClick={fFunction} className="ods-button--ghost" >Results</button>
+    );
 }
 
 class Host extends React.Component {
