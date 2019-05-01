@@ -87,7 +87,11 @@ function score(responses) {
     responses = responses ? responses : [];
     for(let res of responses) {
         if (res.correct){
-            players[res.id].score += 1;
+            if (res.points) {
+                players[res.id].score += +res.points;
+            } else {
+                players[res.id].score += 1;
+            }
         }
     }
     answers = [];

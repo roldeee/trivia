@@ -77,6 +77,14 @@ function Category({ category }) {
     );
 }
 
+function Points({ points }) {
+    return (
+        <h1>
+            {points || 'No point value assigned ☹️'}
+        </h1>
+    );
+}
+
 function Answer({ answer }) {
     return (
         <div className="answer">
@@ -202,7 +210,7 @@ class Host extends React.Component {
         this.j = props.j;
 
         let jAPI = 'http://jservice.io/api/random?count=50';
-        let tAPI = 'https://opentdb.com/api.php?amount=50&type=multiple'
+        let tAPI = 'https://opentdb.com/api.php?amount=50&type=multiple';
 
         axios.get(this.j ? jAPI : tAPI)
         .then(response => this.parseQuestions(response));
@@ -212,11 +220,20 @@ class Host extends React.Component {
         this.socket = openSocket();
 
         this.socket.on('answers', responses => {
+            if (this.j) {
+                responses = responses.map(res => {
+                    return {...res, 
+                        correct: this.checkAnswer(res.answer.toLowerCase(), this.answers[this.state.i].toLowerCase()),
+                        points: this.values[this.state.i]
+                    };
+                });
+            } else {
+                responses = responses.map(res => {
+                    return {...res, 
+                        correct: this.checkAnswer(res.answer.toLowerCase(), this.answers[this.state.i].toLowerCase())};
+                });
+            }
             console.log('recieved', responses);
-            responses = responses.map(res => {
-                return {...res, 
-                    correct: this.checkAnswer(res.answer.toLowerCase(), this.answers[this.state.i].toLowerCase())};
-            });
             this.setState({responses});
         });
         this.socket.on('results', players => {
@@ -246,14 +263,17 @@ class Host extends React.Component {
     parseQuestions(response) {
         if (this.j){
             let results = response.data;
+            console.log(results);
             this.questions = results.map(r => r.question);
             this.answers = results.map(r => r.answer);
             this.categories = results.map(r => r.category.title);
+            this.values = results.map(r => r.value);
             console.log(this.questions, this.answers, this.categories);
             this.setState({
                 questions: this.questions,
                 answers: this.answers,
-                categories: this.categories
+                categories: this.categories,
+                values: this.values
             });
         } else {
             let results = JSON.parse(response.request.response).results;
@@ -286,6 +306,7 @@ class Host extends React.Component {
     }
 
     increment() {
+        console.log(this.state.responses);
         this.socket.emit('score', this.state.responses);
         this.setState(() => {
           return {
@@ -362,7 +383,10 @@ class Host extends React.Component {
                     {this.state.n > -1 &&
                     <div> 
                         {this.j && 
-                        <Category category={this.state.categories[this.state.n]}/>
+                        <>
+                            <Category category={this.state.categories[this.state.n]}/>
+                            <Points points={this.state.values[this.state.n]}/>
+                        </>
                         }
                         <Question click={this.j ? null : this.showMultipleChoice } question={this.state.questions[this.state.n]}/>
                     </div>
