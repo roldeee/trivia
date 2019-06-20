@@ -262,7 +262,7 @@ class Host extends React.Component {
 
     parseQuestions(response) {
         if (this.j){
-            let results = response.data;
+            let results = response.data.filter(r => r.value);
             console.log(results);
             this.questions = results.map(r => r.question);
             this.answers = results.map(r => r.answer);
