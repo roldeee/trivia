@@ -277,7 +277,6 @@ class Host extends React.Component {
             });
         } else {
             let results = JSON.parse(response.request.response).results;
-            results = results.filter(r => (r.category !== "Entertainment: Video Games") && (r.category !== "Entertainment: Japanese Anime & Manga"));
             console.log(results);
             this.questions = results.map(r => this.decode(r.question));
             this.answers = results.map(r => this.decode(r.correct_answer));

@@ -1,7 +1,12 @@
-# Node.js Socket.io Example
+# Trivia One
+Trivia app for work built with React, Express, Socket.io, and Heroku
+ 
+#### Client URL
+https://c1-trivia.herokuapp.com/
+#### Trivia Host URL
+https://c1-trivia.herokuapp.com/host
+#### Jeopardy Host URL
+http://c1-trivia.herokuapp.com/jhost 
 
-This example accompanies the
-[Using WebSockets on Heroku with Node.js](https://devcenter.heroku.com/articles/node-websockets)
-tutorial.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+Made with 💜 by Harold Sandoval
