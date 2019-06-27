@@ -5,13 +5,14 @@ import axios from 'axios';
 import ed from 'edit-distance';
 
 class Timer extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = { 
             seconds: 0,
             on: false
          };
         this.timer = 0;
+        this.time = props.time;
         this.startTimer = this.startTimer.bind(this);
         this.countDown = this.countDown.bind(this);
     }
@@ -21,14 +22,14 @@ class Timer extends React.Component {
             this.startTimer();
         }else if (nextProps.i > this.props.i) {
             this.setState({
-                seconds: 30
+                seconds: this.time
             })
         }
     }
   
     startTimer() {
         this.setState({
-            seconds: 30,
+            seconds: this.time,
             on: true
         });
         this.timer = setInterval(this.countDown, 1000);
@@ -368,7 +369,7 @@ class Host extends React.Component {
                 <div className="half2">
                     <div className={"timer"}>
                         <div className={(this.state.showAnswer ? "invis" : "")}>
-                            <Timer i={this.state.n} />
+                            <Timer i={this.state.n} time={this.j ? 15 : 30}/>
                         </div>
                     </div>
                 </div>
