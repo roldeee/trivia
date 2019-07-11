@@ -11,13 +11,15 @@
     "dev-start": "npm run bld &&  npm run serve",
     "serve": "node server.js",
     "bld": "cd client/ && yarn build",
-    "dev" : "cd client/ && yarn start",
+    "dev": "cd client/ && yarn start",
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
   "keywords": [],
   "author": "Harold Sandoval",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.1",
+    "cheerio": "^1.0.0-rc.3",
     "express": "4.13.4",
     "socket.io": "1.4.6"
   },

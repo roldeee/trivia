@@ -211,7 +211,10 @@ class Host extends React.Component {
         this.j = props.j;
 
         let jAPI = 'http://jservice.io/api/random?count=50';
-        let tAPI = 'https://opentdb.com/api.php?amount=50&type=multiple';
+        let tAPI = '/t';
+
+        this.questions = [];
+        this.answers = [];
 
         axios.get(this.j ? jAPI : tAPI)
         .then(response => this.parseQuestions(response));
@@ -277,11 +280,12 @@ class Host extends React.Component {
                 values: this.values
             });
         } else {
-            let results = JSON.parse(response.request.response).results;
+            console.log(response);
+            let results = response.data;
             console.log(results);
-            this.questions = results.map(r => this.decode(r.question));
-            this.answers = results.map(r => this.decode(r.correct_answer));
-            this.choices = results.map(r => r.incorrect_answers.concat(r.correct_answer).map(this.decode));
+            this.questions.push(...results.questions);
+            this.answers.push(...results.answers);
+            // this.choices = results.map(r => r.incorrect_answers.concat(r.correct_answer).map(this.decode));
             this.setState({
                 questions: this.questions,
                 answers: this.answers
@@ -316,6 +320,11 @@ class Host extends React.Component {
             responses: []
           }
         });
+        if(!this.j && this.state.n % 5 === 4) {
+            console.log('getting new qs');
+            axios.get('/t')
+            .then(response => this.parseQuestions(response));
+        }
       }
     
     showAnswer() {
@@ -369,7 +378,7 @@ class Host extends React.Component {
                 <div className="half2">
                     <div className={"timer"}>
                         <div className={(this.state.showAnswer ? "invis" : "")}>
-                            <Timer i={this.state.n} time={this.j ? 15 : 30}/>
+                            <Timer i={this.state.n} time={this.j ? 25 : 30}/>
                         </div>
                     </div>
                 </div>

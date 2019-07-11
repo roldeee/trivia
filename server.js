@@ -2,16 +2,41 @@
 
 const express = require('express');
 const socketIO = require('socket.io');
+const axios = require('axios');
+const cheerio = require('cheerio');
 const path = require('path');
 
 const PORT = process.env.PORT || 3000;
 
 const server = express()
-  .use(express.static(path.join(__dirname, 'client/build')))
-  .get('*', (req, res) => {
-    res.sendFile(path.join(__dirname+'/client/build/index.html'))
-  })
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+    .get('/t', async (req, res) => {
+        res.send(await getQuestions());
+    })
+    .use(express.static(path.join(__dirname, 'client/build')))
+    .get('*', (req, res) => {
+      res.sendFile(path.join(__dirname+'/client/build/index.html'))
+    })
+    .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+
+async function getQuestions() {
+    return new Promise( (resolve, reject) => {
+        let questions = [];
+        let answers = [];
+        axios.get('http://old.randomtriviagenerator.com/').then( (res) => {
+        const $ = cheerio.load(res.data);
+            for(let i of [...Array(6).keys()]){
+                questions.push($('tr:not(:first-child) > td > a')[i].children[0].data); // Questions
+                answers.push($('tr:not(:first-child) > td:last-child')[i].children[0].data); // Answers
+            }
+            resolve({questions, answers});
+        });
+    });
+}
+
+/////////////////////////////////////////////////////////////
+/////////////////// Server Trivia Logic /////////////////////
+/////////////////////////////////////////////////////////////
+
 
 const io = socketIO(server);
 
