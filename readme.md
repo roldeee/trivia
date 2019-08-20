@@ -1,4 +1,4 @@
-# [Trivia One](https://trivia-250404.appspot.com/)
+# [Trivia One](https://trivia-250404.appspot.com/host)
 Trivia app for work built with React, Express, Socket.io, and Heroku
  
 #### Client URL
